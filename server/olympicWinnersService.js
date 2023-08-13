@@ -1,29 +1,27 @@
-import mysql from 'mysql';
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'reporting_app',
-    password: 'password123'
-});
+const sqlite3 = require('sqlite3').verbose();
+const connection = new sqlite3.Database('./data/olympic_winners.db');
 
 class OlympicWinnersService {
 
     getData(request, resultsCallback) {
-
         const SQL = this.buildSql(request);
+        connection.serialize(() => {
+            connection.all(SQL, (error, results) => {
+                if (error) {
+                    console.error(error.message);
+                }
+                const rowCount = this.getRowCount(request, results);
+                const resultsForPage = this.cutResultsToPageSize(request, results);
 
-        connection.query(SQL, (error, results) => {
-            const rowCount = this.getRowCount(request, results);
-            const resultsForPage = this.cutResultsToPageSize(request, results);
-
-            resultsCallback(resultsForPage, rowCount);
+                resultsCallback(resultsForPage, rowCount);
+            });
         });
     }
 
     buildSql(request) {
 
         const selectSql = this.createSelectSql(request);
-        const fromSql = ' FROM sample_data.olympic_winners ';
+        const fromSql = ' FROM olympic_winners ';
         const whereSql = this.createWhereSql(request);
         const limitSql = this.createLimitSql(request);
 
