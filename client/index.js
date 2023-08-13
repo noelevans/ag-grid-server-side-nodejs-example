@@ -7,15 +7,16 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 const gridOptions = {
 
     rowModelType: 'serverSide',
+    serverSideStoreType: 'partial',
 
     columnDefs: [
         {field: 'athlete'},
-        {field: 'country', rowGroup: true, hide: true},
-        {field: 'sport', rowGroup: true, hide: true},
-        {field: 'year', filter: 'number', filterParams: {newRowsAction: 'keep'}},
-        {field: 'gold', aggFunc: 'sum'},
-        {field: 'silver', aggFunc: 'sum'},
-        {field: 'bronze', aggFunc: 'sum'},
+        {field: 'country'},
+        {field: 'sport'},
+        {field: 'year'},
+        {field: 'gold'},
+        {field: 'silver'},
+        {field: 'bronze'},
     ],
 
     defaultColDef: {
